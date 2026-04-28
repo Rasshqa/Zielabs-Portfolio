@@ -1,8 +1,14 @@
 // app/layout.tsx
+// ─────────────────────────────────────────────────────────────────────────────
+// Root Layout: wrap children dengan Providers (ThemeProvider).
+// suppressHydrationWarning pada <html> wajib untuk next-themes agar tidak
+// terjadi mismatch antara server-render dan client saat hidrating tema.
+// ─────────────────────────────────────────────────────────────────────────────
 
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/app/providers";
 import Navbar from "@/app/components/layout/Navbar";
 import Footer from "@/app/components/layout/Footer";
 
@@ -76,15 +82,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // suppressHydrationWarning: mencegah React warning karena next-themes
+    // menginjeksi atribut class ke <html> pada sisi klien.
     <html
       lang="id"
-      data-scroll-behavior="smooth"
+      suppressHydrationWarning
       className={`${plusJakarta.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#050505] text-zinc-100">
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
+      <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
+        {/* 
+          Providers membungkus seluruh aplikasi.
+          ThemeProvider di dalamnya mengelola kelas .dark / .light pada <html>.
+          Navbar dan Footer menggunakan theme-aware classes dari globals.css.
+        */}
+        <Providers>
+          <Navbar />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

@@ -1,13 +1,83 @@
 @import "tailwindcss";
 
+/* ── Tailwind v4: Dark Mode via class strategy (next-themes injects .dark on <html>) ── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  THEME SYSTEM — Light (default) + Dark                                      */
+/*  Strategi: CSS Custom Properties dikontrol via .dark class di <html>.       */
+/*  next-themes menginjeksi kelas ini secara otomatis saat toggle.             */
+/* ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── Light Mode (Default) ─────────────────────────────────────────────────── */
 :root {
-  --background: #050505;
-  --foreground: #F5F5F5;
+  /* Backgrounds */
+  --background: #FAFAFA;          /* Off-white — nyaman di mata */
+  --background-card: #FFFFFF;     /* Kartu/panel lebih terang dari bg */
+  --background-subtle: #F4F4F5;   /* Zinc-100 untuk subtle separators */
+
+  /* Text */
+  --foreground: #18181B;          /* Zinc-900 — Obsidian Black */
+  --foreground-muted: #71717A;    /* Zinc-500 */
+  --foreground-subtle: #A1A1AA;   /* Zinc-400 */
+
+  /* Brand / Accent */
+  --accent: #50C878;              /* Emerald Green — brand color, tetap sama */
+  --accent-glow: rgba(80, 200, 120, 0.15);
+  --accent-subtle: #DCFCE7;       /* Green-100 untuk subtle bg di light mode */
+  --mint: #A7FFD3;
+
+  /* Borders */
+  --border: rgba(0, 0, 0, 0.08);  /* Sangat tipis di light mode */
+  --border-subtle: rgba(0, 0, 0, 0.05);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px rgba(80, 200, 120, 0.2);
+
+  /* Scrollbar */
+  --scrollbar-track: #F0F0F0;
+  --scrollbar-thumb: #D4D4D8;     /* Zinc-300 */
+  --scrollbar-thumb-hover: #A1A1AA; /* Zinc-400 */
+}
+
+/* ── Dark Mode ────────────────────────────────────────────────────────────── */
+.dark {
+  /* Backgrounds */
+  --background: #050505;          /* Obsidian Black */
+  --background-card: rgba(10, 10, 10, 0.6);  /* Glassmorphism */
+  --background-subtle: #0F0F0F;
+
+  /* Text */
+  --foreground: #F5F5F5;          /* Silver White */
+  --foreground-muted: #71717A;    /* Zinc-500 */
+  --foreground-subtle: #52525B;   /* Zinc-600 */
+
+  /* Brand / Accent */
   --accent: #50C878;
   --accent-glow: rgba(80, 200, 120, 0.15);
-  --accent-subtle: #013220;
+  --accent-subtle: #013220;       /* Forest Green */
   --mint: #A7FFD3;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 30px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(80, 200, 120, 0.3);
+
+  /* Scrollbar */
+  --scrollbar-track: #0a0a0a;
+  --scrollbar-thumb: #1a1a1a;
+  --scrollbar-thumb-hover: #2a2a2a;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  TAILWIND THEME TOKENS                                                       */
+/* ─────────────────────────────────────────────────────────────────────────── */
 
 @theme inline {
   --color-background: var(--background);
@@ -17,52 +87,63 @@
   --font-mono: var(--font-inter);
 }
 
-/* ─── Global Reset ────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  GLOBAL RESET                                                                */
+/* ─────────────────────────────────────────────────────────────────────────── */
 
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Transisi halus saat tema berganti */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading), system-ui, sans-serif;
 }
 
-/* ─── Selection ───────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  SELECTION                                                                   */
+/* ─────────────────────────────────────────────────────────────────────────── */
 
 ::selection {
   background: var(--accent);
   color: #050505;
 }
 
-/* ─── Scrollbar (Webkit) ──────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  SCROLLBAR (Webkit)                                                          */
+/* ─────────────────────────────────────────────────────────────────────────── */
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1a1a1a;
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a2a2a;
+  background: var(--scrollbar-thumb-hover);
 }
 
-/* ─── Premium Aesthetic Utilities ─────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  PREMIUM AESTHETIC UTILITIES                                                 */
+/* ─────────────────────────────────────────────────────────────────────────── */
 
+/* Noise texture — lebih halus di light mode */
 .noise-bg {
   position: relative;
 }
@@ -73,11 +154,12 @@ h1, h2, h3, h4, h5, h6 {
   inset: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.04;
+  opacity: 0.03;
   z-index: 10;
   mix-blend-mode: overlay;
 }
 
+/* Scanlines — hanya tampil di dark mode agar tidak aneh di light */
 .scanlines {
   background: linear-gradient(
     to bottom,
@@ -91,17 +173,30 @@ h1, h2, h3, h4, h5, h6 {
   inset: 0;
   pointer-events: none;
   z-index: 20;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dark .scanlines {
   opacity: 0.15;
 }
 
+/* Glass Card — adaptatif antara light/dark */
 .glass-card {
-  background: rgba(10, 10, 10, 0.6);
+  background: var(--background-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dark mode glass card: glassmorphism effect */
+.dark .glass-card {
   box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
 }
 
+/* Link underline — brand color aksen */
 .link-underline {
   position: relative;
 }
@@ -124,13 +219,27 @@ h1, h2, h3, h4, h5, h6 {
   transform-origin: bottom left;
 }
 
-/* ─── Keyframes ───────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  KEYFRAMES                                                                   */
+/* ─────────────────────────────────────────────────────────────────────────── */
+
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+/* Gradient divider line — lebih visible di light mode */
+.gradient-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--border),
+    transparent
+  );
 }

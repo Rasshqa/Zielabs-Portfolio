@@ -1,4 +1,11 @@
 // app/admin/products/AdminProductsClient.tsx
+// ─────────────────────────────────────────────────────────────────────────────
+// Admin Products table — selalu dark (dikontrol layout).
+// Dibersihkan: border-white/5, bg-zinc-900/50, hover:bg-white/[0.02] dipertahankan
+// karena sudah berada di context admin yang selalu dark.
+// Fix: bg-zinc-800 thumbnail → bg-zinc-800 (sudah ok di dark context)
+// Fix: text-zinc-200 → text-zinc-100 untuk konsistensi
+// ─────────────────────────────────────────────────────────────────────────────
 
 "use client";
 
@@ -38,7 +45,7 @@ export default function AdminProductsClient({
   function handleCloseModal() {
     setShowModal(false);
     setEditProduct(undefined);
-    router.refresh(); // Reload data dari server setelah modal ditutup
+    router.refresh();
   }
 
   function handleDelete(product: ProductDisplay) {
@@ -46,9 +53,7 @@ export default function AdminProductsClient({
     setDeletingId(product.id);
     startTransition(async () => {
       const result = await deleteProduct(product.id);
-      if (!result.success) {
-        alert(`Gagal: ${result.message}`);
-      }
+      if (!result.success) alert(`Gagal: ${result.message}`);
       setDeletingId(null);
       router.refresh();
     });
@@ -56,7 +61,7 @@ export default function AdminProductsClient({
 
   return (
     <>
-      {/* Add button */}
+      {/* ── Toolbar ────────────────────────────────────── */}
       <div className="mb-6 flex justify-end">
         <button
           onClick={handleAdd}
@@ -67,17 +72,18 @@ export default function AdminProductsClient({
         </button>
       </div>
 
-      {/* Table */}
+      {/* ── Empty State ────────────────────────────────── */}
       {products.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-24 text-center">
-          <span className="text-4xl select-none">⬡</span>
+        <div className="flex flex-col items-center gap-3 py-24 text-center border border-white/5 rounded-2xl bg-zinc-900/40">
+          <span className="text-4xl select-none text-[#50C878] opacity-20">⬡</span>
           <p className="text-zinc-500 text-sm">Belum ada produk. Tambah produk pertama Anda!</p>
         </div>
       ) : (
+        /* ── Table ─────────────────────────────────────── */
         <div className="overflow-hidden rounded-2xl border border-white/5">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-white/5 bg-zinc-900/50">
+              <tr className="border-b border-white/5 bg-zinc-900/60">
                 <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-zinc-500">Gambar</th>
                 <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-zinc-500">Produk</th>
                 <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-zinc-500">Kategori</th>
@@ -90,7 +96,7 @@ export default function AdminProductsClient({
                 <tr key={product.id} className="group transition-colors hover:bg-white/[0.02]">
                   {/* Thumbnail */}
                   <td className="px-4 py-3">
-                    <div className="size-12 overflow-hidden rounded-lg bg-zinc-800 flex items-center justify-center">
+                    <div className="size-12 overflow-hidden rounded-lg bg-zinc-800 flex items-center justify-center flex-shrink-0">
                       {product.imageUrl ? (
                         <img
                           src={product.imageUrl}
@@ -103,20 +109,25 @@ export default function AdminProductsClient({
                     </div>
                   </td>
 
+                  {/* Title + Description */}
                   <td className="px-4 py-3">
-                    <div>
-                      <p className="text-sm font-medium text-zinc-200">{product.title}</p>
-                      <p className="mt-0.5 text-xs text-zinc-500">
-                        {truncate(product.description, 60)}
-                      </p>
-                    </div>
+                    <p className="text-sm font-medium text-zinc-100">{product.title}</p>
+                    <p className="mt-0.5 text-xs text-zinc-500">
+                      {truncate(product.description, 60)}
+                    </p>
                   </td>
+
+                  {/* Category */}
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-[#50C878]/10 px-2.5 py-1 text-xs font-medium text-[#50C878]">
                       {product.category.name}
                     </span>
                   </td>
+
+                  {/* Tech Stack */}
                   <td className="px-4 py-3 text-xs text-zinc-400">{product.techStack}</td>
+
+                  {/* Actions */}
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
                       {product.liveUrl && (

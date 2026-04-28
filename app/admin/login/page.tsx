@@ -1,10 +1,15 @@
 // app/admin/login/page.tsx
+// ─────────────────────────────────────────────────────────────────────────────
+// Admin Login — selalu dark. Menggunakan bg-zinc-950 eksplisit (bukan var).
+// Framer Motion spring transition pada error message.
+// ─────────────────────────────────────────────────────────────────────────────
 
 "use client";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { loginAction } from "@/app/admin/login/actions";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -30,9 +35,9 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#050505] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
       <div className="w-full max-w-sm">
-        {/* Brand */}
+        {/* ── Brand ──────────────────────────────────────── */}
         <div className="mb-10 text-center">
           <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl border border-white/10 bg-zinc-900">
             <div className="size-2.5 rounded-full bg-[#50C878] shadow-[0_0_10px_rgba(80,200,120,0.6)]" />
@@ -45,14 +50,23 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="mb-4 rounded-lg bg-red-500/10 px-4 py-2.5 text-sm text-red-400 border border-red-500/20 text-center">
-            {error}
-          </div>
-        )}
+        {/* ── Error ──────────────────────────────────────── */}
+        <AnimatePresence mode="wait">
+          {error && (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0, height: 0, y: -4 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              className="mb-4 overflow-hidden rounded-lg bg-red-500/10 px-4 py-2.5 text-sm text-red-400 border border-red-500/20 text-center"
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* Form */}
+        {/* ── Form ───────────────────────────────────────── */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-400">
