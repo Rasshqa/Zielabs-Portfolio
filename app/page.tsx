@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import HeroScene from "@/app/components/three/HeroSceneWrapper";
 import ProductGrid from "@/app/products/ProductGrid";
-import { getProducts } from "@/app/actions/product.actions";
+import { getFeaturedProducts } from "@/app/actions/product.actions";
 import { getServices } from "@/app/actions/service.actions";
 import { getTestimonials } from "@/app/actions/testimonial.actions";
 import FadeUp from "@/app/components/ui/FadeUp";
@@ -81,12 +81,12 @@ const APPROACH = [
 
 export default async function Home() {
   const [productsResult, servicesResult, testimonialsResult] = await Promise.all([
-    getProducts(),
+    getFeaturedProducts(),
     getServices(),
     getTestimonials(),
   ]);
 
-  const featuredProducts = (productsResult.data ?? []).slice(0, 3).map((p) => ({
+  const featuredProducts = (productsResult.data ?? []).map((p) => ({
     id: p.id,
     title: p.title,
     slug: p.slug,
@@ -478,7 +478,9 @@ export default async function Home() {
             <div className="mt-12">
               <MagneticButton>
                 <a
-                  href="mailto:hello@zielabs.com"
+                  href="https://wa.me/6281234567890"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group relative inline-flex items-center justify-center gap-2 rounded-full bg-zinc-900 dark:bg-zinc-100 px-10 py-5 text-sm font-bold uppercase tracking-wider text-zinc-100 dark:text-zinc-950 transition-all duration-300 hover:bg-zinc-800 dark:hover:bg-white hover:shadow-[0_0_40px_rgba(0,0,0,0.2)] dark:hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-2">

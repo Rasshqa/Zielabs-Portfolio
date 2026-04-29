@@ -44,6 +44,8 @@ export const createProductSchema = z.object({
     .number({ error: "Category ID harus berupa angka." })
     .int({ error: "Category ID harus bilangan bulat." })
     .positive({ error: "Category ID harus lebih dari 0." }),
+
+  isFeatured: z.boolean().optional().default(false),
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;

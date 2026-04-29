@@ -74,7 +74,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.category.name}
             </span>
 
-            <h3 className="mb-3 text-2xl font-bold leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors duration-200">
+            <h3 className="mb-3 text-2xl font-bold leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors duration-200 truncate">
               {product.title}
             </h3>
 
@@ -90,7 +90,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               />
             </div>
 
-            <div className="flex items-center gap-4 pt-5 border-t border-zinc-200 dark:border-white/5">
+            <div className="flex flex-wrap items-center gap-4 pt-5 border-t border-zinc-200 dark:border-white/5 min-h-[60px]">
               {product.liveUrl && (
                 <Link
                   href={product.liveUrl}

@@ -24,6 +24,7 @@ import { createProduct, updateProduct } from "@/app/actions/product.actions";
 import { slugify } from "@/app/lib/utils";
 import { createProductSchema } from "@/app/lib/validations/product.schema";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface ProductFormModalProps {
   product?: ProductDisplay;
@@ -77,6 +78,7 @@ export default function ProductFormModal({
   categories,
   onClose,
 }: ProductFormModalProps) {
+  const router = useRouter();
   const isEditing = !!product;
   const [isPending, startTransition] = useTransition();
 
@@ -137,6 +139,8 @@ export default function ProductFormModal({
     // Sync controlled values ke FormData
     formData.set("title", title);
     formData.set("slug", slug);
+    // isFeatured dikirim sebagai string "on" jika checkbox tercentang, kalau tidak null, ubah ke string untuk Zod
+    formData.set("isFeatured", formData.get("isFeatured") === "on" ? "true" : "false");
 
     // ── CLIENT-SIDE ZOD VALIDATION ────────────────────────────────
     // Bangun object untuk divalidasi dari FormData
@@ -152,6 +156,7 @@ export default function ProductFormModal({
         : (previewUrl ?? undefined),
       liveUrl: (formData.get("liveUrl") as string) || undefined,
       categoryId: Number(formData.get("categoryId")),
+      isFeatured: formData.get("isFeatured") === "true",
     };
 
     const result = createProductSchema.safeParse(rawData);
@@ -174,6 +179,7 @@ export default function ProductFormModal({
         return;
       }
       onClose();
+      router.refresh(); // Memaksa sinkronisasi UI setelah Server Action sukses
     });
   }
 
@@ -384,6 +390,20 @@ export default function ProductFormModal({
               placeholder="https://..."
             />
             <FieldError errors={fieldErrors.liveUrl} />
+          </div>
+
+          {/* ── Featured Toggle ────────────────────────────────── */}
+          <div className="flex items-center gap-3 py-2">
+            <input
+              type="checkbox"
+              id="isFeatured"
+              name="isFeatured"
+              defaultChecked={(product as any)?.isFeatured ?? false}
+              className="size-4 rounded border-white/10 bg-zinc-900 text-[#50C878] focus:ring-[#50C878]/30"
+            />
+            <label htmlFor="isFeatured" className="text-sm font-medium text-zinc-300">
+              Tampilkan di Homepage (Featured)
+            </label>
           </div>
 
           {/* ── Actions ────────────────────────────────────────── */}

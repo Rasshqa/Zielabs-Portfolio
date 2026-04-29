@@ -7,12 +7,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Mail, Phone } from "lucide-react";
 
 export default function FloatingContactButton() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  // Sembunyikan tombol jika berada di route /admin
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   useEffect(() => {
     // Tampilkan tombol setelah sedikit delay agar tidak langsung muncul saat halaman load

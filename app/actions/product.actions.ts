@@ -23,6 +23,7 @@ const productSchema = z.object({
   techStack: z.string().min(2).max(255),
   liveUrl: z.string().url({ message: "Live URL tidak valid." }).max(500).optional().or(z.literal("")),
   categoryId: z.coerce.number().int().positive(),
+  isFeatured: z.coerce.boolean().optional().default(false),
 });
 
 // ─── Helper: Auth guard untuk mutations ───────────────────────────
@@ -30,6 +31,24 @@ const productSchema = z.object({
 async function requireAuth(): Promise<void> {
   const authed = await isAuthenticated();
   if (!authed) throw new Error("Unauthorized: Anda harus login.");
+}
+
+// ─── GET: Featured Products ─────────────────────────────────────────
+
+export async function getFeaturedProducts(): Promise<ActionResponse<ProductWithCategory[]>> {
+  try {
+    const products = await prisma.product.findMany({
+      where: { isFeatured: true },
+      include: { category: true },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    });
+    return { success: true, message: "OK", data: products };
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : "Gagal memuat produk unggulan.";
+    console.error("[getFeaturedProducts]", msg);
+    return { success: false, message: msg };
+  }
 }
 
 // ─── GET: Semua Product ────────────────────────────────────────────
@@ -81,6 +100,7 @@ export async function createProduct(
       techStack: formData.get("techStack"),
       liveUrl: formData.get("liveUrl"),
       categoryId: formData.get("categoryId"),
+      isFeatured: formData.get("isFeatured") === "true" || formData.get("isFeatured") === "on",
     });
 
     if (!parsed.success) {
@@ -88,7 +108,7 @@ export async function createProduct(
       return { success: false, message: firstError };
     }
 
-    const { title, slug, description, techStack, liveUrl, categoryId } = parsed.data;
+    const { title, slug, description, techStack, liveUrl, categoryId, isFeatured } = parsed.data;
 
     // Cek slug unik
     const existing = await prisma.product.findUnique({ where: { slug } });
@@ -110,6 +130,7 @@ export async function createProduct(
         imageUrl,
         liveUrl: liveUrl || null,
         categoryId,
+        isFeatured,
       },
     });
 
@@ -141,6 +162,7 @@ export async function updateProduct(
       techStack: formData.get("techStack"),
       liveUrl: formData.get("liveUrl"),
       categoryId: formData.get("categoryId"),
+      isFeatured: formData.get("isFeatured") === "true" || formData.get("isFeatured") === "on",
     });
 
     if (!parsed.success) {
@@ -148,7 +170,7 @@ export async function updateProduct(
       return { success: false, message: firstError };
     }
 
-    const { title, slug, description, techStack, liveUrl, categoryId } = parsed.data;
+    const { title, slug, description, techStack, liveUrl, categoryId, isFeatured } = parsed.data;
 
     // Cek slug unik (kecuali diri sendiri)
     const duplicate = await prisma.product.findFirst({
@@ -165,6 +187,7 @@ export async function updateProduct(
       techStack: string;
       liveUrl: string | null;
       categoryId: number;
+      isFeatured: boolean;
       imageUrl?: string | null;
     } = {
       title,
@@ -173,6 +196,7 @@ export async function updateProduct(
       techStack,
       liveUrl: liveUrl || null,
       categoryId,
+      isFeatured,
     };
 
     if (newImage !== null) {
