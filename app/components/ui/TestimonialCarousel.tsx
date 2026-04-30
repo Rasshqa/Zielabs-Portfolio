@@ -107,7 +107,7 @@ export default function TestimonialCarousel({
                     ))}
                   </div>
                   <div className="relative flex items-center gap-4 pt-6 border-t border-zinc-100 dark:border-white/5">
-                    <div className="size-12 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 flex items-center justify-center text-sm font-bold text-[#50C878] flex-shrink-0 group-hover:border-[#50C878]/50 transition-colors">
+                    <div className="size-16 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 flex items-center justify-center text-lg font-bold text-[#50C878] flex-shrink-0 group-hover:border-[#50C878]/50 transition-colors">
                       {t.avatarUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={t.avatarUrl} alt={t.name} className="size-full object-cover" />
@@ -116,7 +116,7 @@ export default function TestimonialCarousel({
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{t.name}</p>
+                      <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{t.name}</p>
                       <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1 uppercase tracking-wider">
                         {t.role}, <span className="text-zinc-500 dark:text-zinc-400">{t.company}</span>
                       </p>
