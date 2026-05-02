@@ -31,7 +31,13 @@ export default function ThemeToggle() {
   // Render placeholder button saat belum mounted agar tidak ada layout shift
   if (!mounted) {
     return (
-      <div className="size-9 rounded-full" aria-hidden="true" />
+      <button
+        id="theme-toggle"
+        aria-hidden="true"
+        className="relative flex size-9 items-center justify-center rounded-full border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 overflow-hidden"
+      >
+        <span className="size-4" />
+      </button>
     );
   }
 

@@ -9,6 +9,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import TiltCard from "./TiltCard";
 import { motion } from "framer-motion";
 
@@ -53,11 +54,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* ── Thumbnail ── */}
           <div className="relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-white/5">
             {product.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={product.imageUrl}
                 alt={product.title}
-                className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 noise-bg">

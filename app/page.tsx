@@ -7,7 +7,10 @@
 // Dark Mode : bg-zinc-950, text-zinc-100, border-white/5, card glassmorphism
 // ─────────────────────────────────────────────────────────────────────────────
 
+export const revalidate = 3600; // Cache page for 1 hour, invalidated by server actions
+
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   ArrowRight,
   Globe,
@@ -22,7 +25,9 @@ import {
   Code2,
 } from "lucide-react";
 import HeroScene from "@/app/components/three/HeroSceneWrapper";
-import ProductGrid from "@/app/products/ProductGrid";
+const ProductGrid = dynamic(() => import("@/app/products/ProductGrid"), {
+  ssr: true, // Biarkan SSR aktif untuk SEO
+});
 import { getFeaturedProducts } from "@/app/actions/product.actions";
 import { getServices } from "@/app/actions/service.actions";
 import { getTestimonials } from "@/app/actions/testimonial.actions";
@@ -30,7 +35,11 @@ import FadeUp from "@/app/components/ui/FadeUp";
 import TextReveal from "@/app/components/ui/TextReveal";
 import MagneticButton from "@/app/components/ui/MagneticButton";
 import TiltCard from "@/app/components/ui/TiltCard";
-import TestimonialCarousel from "@/app/components/ui/TestimonialCarousel";
+
+// Lazy load komponen carousel yang berat dan berada di bawah (below the fold)
+const TestimonialCarousel = dynamic(() => import("@/app/components/ui/TestimonialCarousel"), {
+  ssr: true, // Biarkan SSR aktif untuk SEO, namun JS bundle akan dipisah (code splitting)
+});
 
 // ─── Icon Mapping ──────────────────────────────────────────────────
 

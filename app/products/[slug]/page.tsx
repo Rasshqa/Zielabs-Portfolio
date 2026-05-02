@@ -8,6 +8,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ExternalLink, Tag, Code2, Calendar } from "lucide-react";
 import { getProductBySlug, getProducts } from "@/app/actions/product.actions";
 import FadeUp from "@/app/components/ui/FadeUp";
@@ -105,12 +106,14 @@ export default async function ProductDetailPage({
         {/* ── Hero Image ────────────────────────────────────────── */}
         {product.imageUrl && (
           <FadeUp delay={0.25}>
-            <div className="mb-14 w-full overflow-hidden rounded-3xl border border-zinc-200 dark:border-white/5 shadow-md dark:shadow-none bg-zinc-100 dark:bg-zinc-900 aspect-video">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="relative mb-14 w-full overflow-hidden rounded-3xl border border-zinc-200 dark:border-white/5 shadow-md dark:shadow-none bg-zinc-100 dark:bg-zinc-900 aspect-video">
+              <Image
                 src={product.imageUrl}
                 alt={product.title}
-                className="h-full w-full object-cover object-top"
+                fill
+                priority
+                sizes="(max-width: 1200px) 100vw, 1024px"
+                className="object-cover object-top"
               />
             </div>
           </FadeUp>

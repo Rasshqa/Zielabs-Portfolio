@@ -1,5 +1,7 @@
 // app/lib/upload.ts
 
+import sharp from "sharp";
+
 const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -27,12 +29,19 @@ export function validateImageFile(file: File): { valid: boolean; error?: string 
 /**
  * Konversi File menjadi Base64 Data URI string.
  * Hasilnya bisa langsung dipakai sebagai `src` pada tag <img>.
+ * Secara otomatis mengonversi gambar ke format WebP untuk performa lebih baik.
  */
 export async function fileToBase64(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  const base64 = buffer.toString("base64");
-  return `data:${file.type};base64,${base64}`;
+  
+  // Konversi ke format webp dan optimasi ukurannya
+  const webpBuffer = await sharp(buffer)
+    .webp({ quality: 80 })
+    .toBuffer();
+    
+  const base64 = webpBuffer.toString("base64");
+  return `data:image/webp;base64,${base64}`;
 }
 
 /**

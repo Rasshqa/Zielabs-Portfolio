@@ -81,13 +81,15 @@ function CustomModel() {
 function Particles() {
   const ref = useRef<THREE.Points>(null);
 
+  const elapsedRef = useRef(0);
   useFrame((state, delta) => {
+    elapsedRef.current += delta;
     if (ref.current) {
       // Rotasi ambient yang sangat halus
       ref.current.rotation.y += delta * 0.02;
       ref.current.rotation.x += delta * 0.005;
       // Gentle sine movement
-      ref.current.position.y = Math.sin(state.clock.elapsedTime * 0.1) * 0.3;
+      ref.current.position.y = Math.sin(elapsedRef.current * 0.1) * 0.3;
     }
   });
 
